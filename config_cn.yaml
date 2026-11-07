@@ -1,0 +1,308 @@
+# 配置模板提供者：https://github.com/youreverest/Mihomo-Config
+# 开源协议：AGPL v3.0
+# 本配置模板为国行特供版
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+mode: rule
+ipv6: true
+log-level: info
+external-controller: 127.0.0.1:9090
+
+# 自定义直连节点
+proxies:
+  - name: "🏴‍☠️ Direct"
+    type: direct
+    udp: true
+
+# 策略组配置（利用 Mihomo 原生 filter 动态筛选节点）
+proxy-groups:
+  - name: "SELECT"
+    type: select
+    proxies:
+      - "🇺🇳 ALL"
+      - "🏴‍☠️ Direct"
+      - "🇨🇳 TW China"
+      - "🇭🇰 HK China"
+      - "🇯🇵 JPN"
+      - "🇰🇷 KOR"
+      - "🇸🇬 SGP"
+      - "🇺🇸 USA"
+
+  - name: "🇺🇳 ALL"
+    type: select
+    use: [] # 若使用 proxy-provider 可在此处填入提供商名称，或由客户端自动收集所有节点
+
+  - name: "🇨🇳 TW China"
+    type: url-test
+    filter: "(?i)台湾|TW|tw|Taiwan|ROC|台灣|臺灣|湾|灣|中华|中華|民国|民國|中华民国|中華民國|🇹🇼"
+    url: "http://www.gstatic.com/generate_204"
+    interval: 900
+    tolerance: 150
+
+  - name: "🇭🇰 HK China"
+    type: url-test
+    filter: "(?i)香港|HK|hk|Hong Kong|Hong|HONG|港|🇭🇰"
+    url: "http://www.gstatic.com/generate_204"
+    interval: 900
+    tolerance: 150
+
+  - name: "🇯🇵 JPN"
+    type: url-test
+    filter: "(?i)日本|JP|Japan|日|🇯🇵"
+    url: "http://www.gstatic.com/generate_204"
+    interval: 900
+    tolerance: 150
+
+  - name: "🇰🇷 KOR"
+    type: url-test
+    filter: "(?i)韩国|KR|Korea|韩|韓|🇰🇷"
+    url: "http://www.gstatic.com/generate_204"
+    interval: 900
+    tolerance: 150
+
+  - name: "🇸🇬 SGP"
+    type: url-test
+    filter: "(?i)新加坡|SG|Singapore|新|坡|狮|獅|🇸🇬"
+    url: "http://www.gstatic.com/generate_204"
+    interval: 900
+    tolerance: 150
+
+  - name: "🇺🇸 USA"
+    type: url-test
+    filter: "(?i)美国|US|USA|United States|United|UNITED|States|America|美|米|🇺🇸"
+    url: "http://www.gstatic.com/generate_204"
+    interval: 900
+    tolerance: 150
+
+# DNS 配置（优化整合版 Fake-IP）
+dns:
+  enable: true
+  listen: "0.0.0.0:10053"
+  ipv6: true
+  enhanced-mode: "fake-ip"
+  fake-ip-range: "198.18.0.1/16"
+  use-hosts: true
+  respect-rules: true
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "*.localhost"
+    - "*.home.arpa"
+    - "*.internal"
+    - "tplogin.cn"
+    - "melogin.cn"
+    - "falogin.cn"
+    - "miwifi.com"
+    - "mi.wifi"
+    - "router.asus.com"
+    - "router.ctc"
+    - "localhost.ptlogin2.qq.com"
+    - "localhost.sec.qq.com"
+    - "localhost.work.weixin.qq.com"
+    - "*.dingtalk.com"
+    - "*.work.weixin.qq.com"
+    - "*.cmccsign.com"
+    - "*.139.com"
+    - "*.10086.cn"
+    - "*.111.com"
+    - "*.88.com"
+    - "*.mail.cn"
+    - "time.windows.com"
+    - "time.apple.com"
+    - "time.nist.gov"
+    - "time.ncl.edu.tw"
+    - "pool.ntp.org"
+    - "*.ntp.org"
+    - "time.*.com"
+    - "time.*.gov"
+    - "time.*.edu.cn"
+    - "time.*.apple.com"
+    - "*.msftconnecttest.com"
+    - "*.msftncsi.com"
+    - "dns.msftncsi.com"
+    - "captive.apple.com"
+    - "stun.l.google.com"
+    - "*.xboxlive.com"
+    - "*.battlenet.com.cn"
+    - "*.blizzard.cn"
+    - "*.pvp.net"
+    - "*.moba.qq.com"
+    - "*.stun.*.*"
+    - "*.stun.*.*.*"
+    - "*.stun.*.*.*.*"
+    - "*.synology.com"
+    - "*.myqnapcloud.com"
+    - "_tcp.*"
+    - "_udp.*"
+    - "_services._dns-sd._udp.*"
+  default-nameserver:
+    - "119.29.29.29"
+    - "223.5.5.5"
+  proxy-server-nameserver:
+    - "https://doh.pub/dns-query"
+    - "https://doh.baidu.com/dns-query"
+  nameserver:
+    - "https://dns.google/dns-query"
+    - "https://cloudflare-dns.com/dns-query"
+  nameserver-policy:
+    "geosite:cn":
+      - "119.29.29.29"
+      - "223.5.5.5"
+    "*.cn":
+      - "119.29.29.29"
+      - "223.5.5.5"
+  fallback:
+    - "8.8.8.8"
+    - "1.1.1.1"
+  fallback-filter:
+    geoip: true
+    geoip-code: "CN"
+    geosite:
+      - "gfw"
+      - "greatfire"
+    ipcidr:
+      - "0.0.0.0/8"
+      - "10.0.0.0/8"
+      - "100.64.0.0/10"
+      - "127.0.0.0/8"
+      - "169.254.0.0/16"
+      - "172.16.0.0/12"
+      - "192.168.0.0/16"
+      - "198.18.0.0/15"
+      - "224.0.0.0/4"
+      - "240.0.0.0/4"
+    domain:
+      - "+.google.com"
+      - "+.facebook.com"
+      - "+.youtube.com"
+
+# 规则配置
+rules:
+  - "IP-CIDR,0.0.0.0/8,DIRECT,no-resolve"
+  - "IP-CIDR,10.0.0.0/8,DIRECT,no-resolve"
+  - "IP-CIDR,100.64.0.0/10,DIRECT,no-resolve"
+  - "IP-CIDR,127.0.0.0/8,DIRECT,no-resolve"
+  - "IP-CIDR,169.254.0.0/16,DIRECT,no-resolve"
+  - "IP-CIDR,172.16.0.0/12,DIRECT,no-resolve"
+  - "IP-CIDR,192.168.0.0/16,DIRECT,no-resolve"
+  - "IP-CIDR,198.18.0.0/15,DIRECT,no-resolve"
+  - "IP-CIDR,224.0.0.0/4,DIRECT,no-resolve"
+  - "IP-CIDR,240.0.0.0/4,DIRECT,no-resolve"
+  - "DST-PORT,123,DIRECT"
+
+  # 局域网、路由器、办公、NTP、连通性等直连规则
+  - "DOMAIN-SUFFIX,lan,DIRECT"
+  - "DOMAIN-SUFFIX,local,DIRECT"
+  - "DOMAIN-SUFFIX,localhost,DIRECT"
+  - "DOMAIN-SUFFIX,home.arpa,DIRECT"
+  - "DOMAIN-SUFFIX,internal,DIRECT"
+  - "DOMAIN,tplogin.cn,DIRECT"
+  - "DOMAIN,melogin.cn,DIRECT"
+  - "DOMAIN,falogin.cn,DIRECT"
+  - "DOMAIN,miwifi.com,DIRECT"
+  - "DOMAIN,mi.wifi,DIRECT"
+  - "DOMAIN,router.asus.com,DIRECT"
+  - "DOMAIN,router.ctc,DIRECT"
+  - "DOMAIN,localhost.ptlogin2.qq.com,DIRECT"
+  - "DOMAIN,localhost.sec.qq.com,DIRECT"
+  - "DOMAIN,localhost.work.weixin.qq.com,DIRECT"
+  - "DOMAIN-SUFFIX,dingtalk.com,DIRECT"
+  - "DOMAIN-SUFFIX,work.weixin.qq.com,DIRECT"
+  - "DOMAIN-SUFFIX,cmccsign.com,DIRECT"
+  - "DOMAIN-SUFFIX,139.com,DIRECT"
+  - "DOMAIN-SUFFIX,10086.cn,DIRECT"
+  - "DOMAIN-SUFFIX,111.com,DIRECT"
+  - "DOMAIN-SUFFIX,88.com,DIRECT"
+  - "DOMAIN-SUFFIX,mail.cn,DIRECT"
+  - "DOMAIN,time.windows.com,DIRECT"
+  - "DOMAIN,time.apple.com,DIRECT"
+  - "DOMAIN,time.nist.gov,DIRECT"
+  - "DOMAIN,time.ncl.edu.tw,DIRECT"
+  - "DOMAIN,pool.ntp.org,DIRECT"
+  - "DOMAIN-SUFFIX,ntp.org,DIRECT"
+  - "DOMAIN-KEYWORD,time.,DIRECT"
+  - "DOMAIN-SUFFIX,msftconnecttest.com,DIRECT"
+  - "DOMAIN-SUFFIX,msftncsi.com,DIRECT"
+  - "DOMAIN,dns.msftncsi.com,DIRECT"
+  - "DOMAIN,captive.apple.com,DIRECT"
+  - "DOMAIN,stun.l.google.com,DIRECT"
+  - "DOMAIN-SUFFIX,xboxlive.com,DIRECT"
+  - "DOMAIN-SUFFIX,battlenet.com.cn,DIRECT"
+  - "DOMAIN-SUFFIX,blizzard.cn,DIRECT"
+  - "DOMAIN-SUFFIX,pvp.net,DIRECT"
+  - "DOMAIN-SUFFIX,moba.qq.com,DIRECT"
+  - "DOMAIN-KEYWORD,stun,DIRECT"
+  - "DOMAIN-SUFFIX,synology.com,DIRECT"
+  - "DOMAIN-SUFFIX,myqnapcloud.com,DIRECT"
+  - "DOMAIN-KEYWORD,_tcp,DIRECT"
+  - "DOMAIN-KEYWORD,_udp,DIRECT"
+  - "DOMAIN-KEYWORD,_services._dns-sd._udp,DIRECT"
+
+  # 广告拦截
+  - "DOMAIN-SUFFIX,admob.com,REJECT"
+  - "GEOSITE,category-ads-all,REJECT"
+  - "DOMAIN-SUFFIX,doubleclick.net,REJECT"
+  - "DOMAIN-SUFFIX,googlesyndication.com,REJECT"
+  - "DOMAIN-SUFFIX,e.qq.com,REJECT"
+  - "DOMAIN-SUFFIX,gdt.qq.com,REJECT"
+  - "DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT"
+  - "DOMAIN-SUFFIX,alimama.com,REJECT"
+  - "DOMAIN-SUFFIX,umeng.com,REJECT"
+  - "DOMAIN-SUFFIX,cnzz.com,REJECT"
+  - "DOMAIN-SUFFIX,union.baidu.com,REJECT"
+  - "DOMAIN-SUFFIX,e.kuaishou.com,REJECT"
+
+  # 苹果国内直连
+  - "DOMAIN-SUFFIX,apple.com.cn,DIRECT"
+  - "DOMAIN-KEYWORD,cn.apple.com,DIRECT"
+
+  # Google 国内代理
+  - "DOMAIN-SUFFIX,g.cn,SELECT"
+  - "DOMAIN-SUFFIX,google.cn,SELECT"
+  - "DOMAIN-KEYWORD,google,SELECT"
+
+  # Google Play & 国外服务代理    
+  - "DOMAIN-SUFFIX,google.com,SELECT"
+  - "DOMAIN-SUFFIX,youtu.be,SELECT"
+  - "DOMAIN-KEYWORD,googleplay,SELECT"
+  - "DOMAIN-KEYWORD,googleapis,SELECT"
+  - "DOMAIN-KEYWORD,gmail,SELECT"
+  - "DOMAIN-KEYWORD,youtube,SELECT"
+  - "DOMAIN-KEYWORD,googlevideo,SELECT"
+
+  # 苹果海外服务走代理
+  - "DOMAIN-SUFFIX,apple.com,SELECT"
+  - "DOMAIN-KEYWORD,apple,SELECT"
+  - "DOMAIN-KEYWORD,icloud,SELECT"
+  - "DOMAIN-KEYWORD,itunes,SELECT"
+
+  # 常用海外服务
+  - "DOMAIN-SUFFIX,microsoft.com,SELECT"
+  - "DOMAIN-SUFFIX,live.com,SELECT"
+  - "DOMAIN-SUFFIX,x.com,SELECT"
+  - "DOMAIN-SUFFIX,steampowered.com,SELECT"
+  - "DOMAIN-SUFFIX,s.team,SELECT"
+  - "DOMAIN-KEYWORD,steam,SELECT"
+  - "DOMAIN-SUFFIX,github.com,SELECT"
+  - "DOMAIN-SUFFIX,githubusercontent.com,SELECT"
+  - "DOMAIN-SUFFIX,t.me,SELECT"
+  - "DOMAIN-KEYWORD,telegram,SELECT"
+  - "DOMAIN-KEYWORD,openai,SELECT"
+  - "DOMAIN-SUFFIX,qzz.io,SELECT"
+  - "DOMAIN-KEYWORD,gaijin,DIRECT"
+  - "DOMAIN-SUFFIX,gaijin.net,DIRECT"
+
+  # 国内 IP 直连
+  - "GEOIP,CN,DIRECT"
+  - "GEOSITE,CN,DIRECT"
+  - "DOMAIN-SUFFIX,cn,SELECT"
+  - "DOMAIN-KEYWORD,com.cn,DIRECT"
+  - "DOMAIN-SUFFIX,qq.com,DIRECT"
+  - "DOMAIN-KEYWORD,tencent,DIRECT"
+  - "DOMAIN-KEYWORD,ali,DIRECT"
+  - "DOMAIN-SUFFIX,7723.com,DIRECT"
+  - "DOMAIN-SUFFIX,4399.com,DIRECT"
+
+  # 兜底规则
+  - "MATCH,SELECT"
