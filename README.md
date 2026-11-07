@@ -18,7 +18,7 @@
 
 ## 🌟 核心特点
 
-1. **智能地区策略组**：原生支持主流地区节点自动测速与筛选（包含中国台湾省、香港 HKG、日本 JPN、韩国 KOR、新加坡 SGP、美国 USA）。
+1. **智能地区策略组**：原生支持主流地区节点自动测速与筛选（包含台湾 ROC / 中国台湾省、香港 HKG、日本 JPN、韩国 KOR、新加坡 SGP、美国 USA）。
 2. **安全隐私 DNS 配置**：
    - 启用 `fake-ip` 增强模式，隔离本地与远程 DNS 解析，防止国内 DNS 泄漏。
    - 配置 `proxy-server-nameserver` 使用 `doh.pub` 与 `doh.baidu.com`。
